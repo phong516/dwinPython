@@ -41,9 +41,11 @@ class dwin:
     def setTextVP(self, address:int, text:str):
         textLen = len(text)
         textList = list(text)
-        sendBuffer = [0x5A, 0xA5, textLen+3, 0x82, (address>>8)&0xFF, address&0xFF]
+        sendBuffer = [0x5A, 0xA5, textLen+5, 0x82, (address>>8)&0xFF, address&0xFF]
         for value in textList:
             sendBuffer.append(ord(value))
+        sendBuffer.append(0xFF)
+        sendBuffer.append(0xFF)
         self.dwinSerial.write(bytes(sendBuffer))
 
     def switchPage(self, pageID:int):
