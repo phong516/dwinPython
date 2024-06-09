@@ -24,7 +24,6 @@ class dwin:
         data = self.dwinSerial.read(size=size)
         hex_data = data.hex()
         keyCode = int(hex_data[-4:], 16)
-        self.dwinSerial.reset_input_buffer()
         return keyCode
 
     def setDataVP(self, address:int, data:int):
