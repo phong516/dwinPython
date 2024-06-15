@@ -25,13 +25,15 @@ class MenuItem:
 
 
 class MenuSelection: 
-    def __init__(self, port:str="/dev/ttyAMA0", baudrate:int=115200, button_order:int=0x4000, button_yes:int=0x3000, button_mic:int=0x5000, text_order:int=0x6000):
+    def __init__(self, port:str="/dev/ttyAMA0", baudrate:int=115200, button_order:int=0x4000, button_yes:int=0x3000, button_mic:int=0x5000, button_deliveried:int=0x6000, text_order:int=0x6000, data_tray:int=0x5008):
         self.dwin = dwin.dwin(port=port, baudrate=baudrate)
         self.menu_items = {}
         self.button_order = button_order
         self.button_yes = button_yes
         self.button_mic = button_mic
         self.text_order = text_order
+        self.button_deliveried = button_deliveried
+        self.data_tray = data_tray
 
     def add_menu_item(self, name:str, vp:int, unit_price:int):
         if name not in self.menu_items:
@@ -42,6 +44,10 @@ class MenuSelection:
 
     def resetOrder(self):
         self.dwin.switchPage(0)
+
+    def deliver(self, tray:int):
+        self.dwin.switchPage(6)
+        self.dwin.setDataVP(self.data_tray, tray)
 
     def order(self, UseMic:bool=False):
         text_order_str = ""

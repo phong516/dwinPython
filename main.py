@@ -49,10 +49,11 @@ if __name__ == "__main__":
     mqtt.set_callback(on_message=True)
     mqtt.connect()
     mqtt.subscribe("test/order")
+    mqtt.subscribe("test/delivery")
     mqtt.loop_start()
 
 #MENU--------------------------------------------------------------
-    menu = MenuSelection(port="/dev/ttyUSB0")
+    menu = MenuSelection(port="/dev/serial/by-path/platform-3f980000.usb-usb-0:1.1.2:1.0-port0")
     menu.add_menu_item("khoai tây chiên", 0x5000, 15)
     menu.add_menu_item("gà rán", 0x5001, 30)
     menu.add_menu_item("bánh mì", 0x5002, 20)
@@ -72,6 +73,7 @@ if __name__ == "__main__":
     ]
 
     tableReceived: dict = {}
+    trayReceived: dict = {}
     isWaiting: bool = False
 
     while True:
@@ -89,13 +91,21 @@ if __name__ == "__main__":
                 case menu.button_mic:
                     print("mic")
                     bill = menu.order(UseMic=True)
-                    print(bill)
 
                 case menu.button_yes:
                     print("yes")
+                    for table in tableReceived:
+                        if tableReceived[table] == ORDERING:
+                            bill = "Bàn %d\n %s" % (table, bill)
                     mqtt.publish(topic="test/topic", payload=bill)
                     bill = ""
                     isWaiting = False
+
+                case menu.button_deliveried:
+                    print("delivered")
+                    isWaiting = False
+
+                
 
         if mqtt.message_received == True:
             mqtt.message_received = False
@@ -105,19 +115,31 @@ if __name__ == "__main__":
                     for table in tables:
                         if int(table) < len(tablePoses):
                             tableReceived[int(table)] = UNNAVIGATED
-                    print(tableReceived)
+
+                case 'test/delivery':
+                    tables = re.findall(r'(\d+)\/(\d+)', mqtt.message.payload.decode("utf-8"))
+                    for table in tables:
+                        if int(table[0]) < len(tablePoses):
+                            tableReceived[int(table[0])] = UNNAVIGATED
+                            trayReceived[int(table[0])] = table[1]
+
 
         for table in tableReceived:
             if tableReceived[table] == UNNAVIGATED:
                 setGoalPose(tablePoses[table][0], tablePoses[table][1], tablePoses[table][2])
                 tableReceived[table] = RUNNING
+                time.sleep(5)
+                menu.resetOrder()
                 break
 
             if tableReceived[table] == RUNNING:
                 if navigator.isTaskComplete():
                     tableReceived[table] = ORDERING
                     isWaiting = True
-                    menu.startOrder()
+                    if trayReceived == {}:
+                        menu.startOrder()
+                    else:
+                        menu.deliver(int(trayReceived[table]))
                     print("ordering")
 
                 break
@@ -132,6 +154,7 @@ if __name__ == "__main__":
                 #if tableReceived reached the end of the list
                 if table == list(tableReceived.keys())[-1]:
                     tableReceived = {}
+                    trayReceived = {}
                     setGoalPose(0.0, 0.0, 0.0)
                     time.sleep(5)
                     menu.resetOrder()
