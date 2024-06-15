@@ -37,6 +37,12 @@ class MenuSelection:
         if name not in self.menu_items:
             self.menu_items[name] = MenuItem(name, vp, unit_price)
 
+    def startOrder(self):
+        self.dwin.switchPage(1)
+
+    def resetOrder(self):
+        self.dwin.switchPage(0)
+
     def order(self, UseMic:bool=False):
         text_order_str = ""
         total_price:int = 0
