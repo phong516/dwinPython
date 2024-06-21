@@ -15,6 +15,28 @@ def remove_accents(input_str):
             s += c
     return s
 
+def text_to_number(text:str) -> str:
+    numbers = {
+      "one": 1,
+      "two": 2,
+      "three": 3,
+      "four": 4,
+      "five": 5,
+      "six": 6,
+      "seven": 7,
+      "eight": 8,
+      "nine": 9,
+  }
+  
+    words = text.split()
+    new_words = []
+    for word in words:
+        if word in numbers:
+            new_words.append(str(numbers[word]))
+        else:
+            new_words.append(word)
+    return " ".join(new_words)
+
 class MenuItem:
     def __init__(self, name:str, vp:int, unit_price:int):
         self.name : str = name
@@ -68,6 +90,7 @@ class MenuSelection:
             with sr.Microphone() as source:
                 audio = recognizer.listen(source)
             content = recognizer.recognize_google(audio, language='vi-VN')
+            content = text_to_number(content)
             print(content)
             pattern = r'(\d+)\s+([^\d,]+)'
             matches = re.findall(pattern, content)
