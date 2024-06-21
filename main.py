@@ -97,7 +97,7 @@ if __name__ == "__main__":
                     for table in tableReceived:
                         if tableReceived[table] == ORDERING:
                             bill = "Bàn %d\n %s" % (table, bill)
-                    mqtt.publish(topic="test/topic", payload=bill)
+                    mqtt.publish(topic="client/bill", payload=bill)
                     bill = ""
                     isWaiting = False
 
@@ -110,13 +110,13 @@ if __name__ == "__main__":
         if mqtt.message_received == True:
             mqtt.message_received = False
             match mqtt.message.topic:
-                case 'test/order':
+                case 'manager/order':
                     tables = re.findall(r'\d+', mqtt.message.payload.decode("utf-8"))
                     for table in tables:
                         if int(table) < len(tablePoses):
                             tableReceived[int(table)] = UNNAVIGATED
 
-                case 'test/delivery':
+                case 'manager/delivery':
                     tables = re.findall(r'(\d+)\/(\d+)', mqtt.message.payload.decode("utf-8"))
                     for table in tables:
                         if int(table[0]) < len(tablePoses):
