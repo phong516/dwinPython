@@ -17,15 +17,15 @@ def remove_accents(input_str):
 
 def text_to_number(text:str) -> str:
     numbers = {
-      "one": 1,
-      "two": 2,
-      "three": 3,
-      "four": 4,
-      "five": 5,
-      "six": 6,
-      "seven": 7,
-      "eight": 8,
-      "nine": 9,
+      "một": 1,
+      "hai": 2,
+      "ba": 3,
+      "bốn": 4,
+      "năm": 5,
+      "sáu": 6,
+      "bảy": 7,
+      "tám": 8,
+      "chín": 9,
   }
   
     words = text.split()
