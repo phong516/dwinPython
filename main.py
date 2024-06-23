@@ -67,9 +67,9 @@ if __name__ == "__main__":
 #LOOP----------------------------------------------------------------
     bill:str = ""
     tablePoses = [
-        [0.0, 0.0, -1.57],
         [1.0, 0.0, -1.57],
-        [2.0, 0.0, -1.57]
+        [2.0, 0.0, -1.57],
+        [3.0, 0.0, -1.57]
     ]
 
     tableReceived: dict = {}
@@ -109,6 +109,7 @@ if __name__ == "__main__":
 
         if mqtt.message_received == True:
             mqtt.message_received = False
+            isWaiting = False
             match mqtt.message.topic:
                 case 'manager/order':
                     tables = re.findall(r'\d+', mqtt.message.payload.decode("utf-8"))
