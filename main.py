@@ -46,14 +46,14 @@ if __name__ == "__main__":
 #MQTT-----------------------------------------------------------
     mqtt = MQTT(client_id="hodangtu01", broker="e94ecb09544d4cd39ee5231c33b0f001.s2.eu.hivemq.cloud")
     mqtt.set_credentials(username="hodangtu0601", password="Hodangtu!@3")
-    mqtt.set_callback(on_message=True)
+    mqtt.set_callback(on_message=True, on_connect=True)
     mqtt.connect()
-    mqtt.subscribe("test/order")
-    mqtt.subscribe("test/delivery")
+    mqtt.subscribe("manager/order")
+    mqtt.subscribe("manager/deliver")
     mqtt.loop_start()
 
 #MENU--------------------------------------------------------------
-    menu = MenuSelection(port="/dev/serial/by-path/platform-3f980000.usb-usb-0:1.1.2:1.0-port0")
+    menu = MenuSelection(port="/dev/ttyUSB0")
     menu.add_menu_item("khoai tây chiên", 0x5000, 15)
     menu.add_menu_item("gà rán", 0x5001, 30)
     menu.add_menu_item("bánh mì", 0x5002, 20)
@@ -67,9 +67,9 @@ if __name__ == "__main__":
 #LOOP----------------------------------------------------------------
     bill:str = ""
     tablePoses = [
-        [2.0, 1.0, -1.57],
-        [1.0, 1.0, -1.57],
-        [0.0, 1.0, -1.57]
+        [0.0, 0.0, -1.57],
+        [1.0, 0.0, -1.57],
+        [2.0, 0.0, -1.57]
     ]
 
     tableReceived: dict = {}
@@ -116,7 +116,7 @@ if __name__ == "__main__":
                         if int(table) < len(tablePoses):
                             tableReceived[int(table)] = UNNAVIGATED
 
-                case 'manager/delivery':
+                case 'manager/deliver':
                     tables = re.findall(r'(\d+)\/(\d+)', mqtt.message.payload.decode("utf-8"))
                     for table in tables:
                         if int(table[0]) < len(tablePoses):
