@@ -111,6 +111,8 @@ if __name__ == "__main__":
         if mqtt.message_received == True:
             mqtt.message_received = False
             isWaiting = False
+            tableReceived = {}
+            trayReceived = {}
             match mqtt.message.topic:
                 case 'manager/order':
                     tables = re.findall(r'\d+', mqtt.message.payload.decode("utf-8"))
