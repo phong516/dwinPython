@@ -53,7 +53,7 @@ if __name__ == "__main__":
     mqtt.loop_start()
 
 #MENU--------------------------------------------------------------
-    menu = MenuSelection(port="/dev/ttyUSB0")
+    menu = MenuSelection(port="/dev/serial/by-path/platform-3f980000.usb-usb-0:1.1.3:1.0-port0")
     menu.add_menu_item("khoai tây chiên", 0x5000, 15)
     menu.add_menu_item("gà rán", 0x5001, 30)
     menu.add_menu_item("bánh mì", 0x5002, 20)
