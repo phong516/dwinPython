@@ -2,6 +2,8 @@ import serial
 import time
 
 class dwin:
+
+     
     def __init__(self, port:str="/dev/ttyAMA0", baudrate:int=115200):
         self.dwinSerial = serial.Serial(
                 port=port,

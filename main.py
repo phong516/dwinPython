@@ -64,13 +64,15 @@ if __name__ == "__main__":
     menu.add_menu_item("nước ngọt", 0x5006, 10)
     menu.add_menu_item("kem", 0x5007, 10)
 
+    menu.resetOrder()
+
 #LOOP----------------------------------------------------------------
     bill:str = ""
     tablePoses = [
         [1.0, -0.3, -1.57],
-        [2.0, -0.3, -1.57],
-        [3.0, -0.3, -1.57],
-        [4.0, -0.3, -1.57]
+        [1.0, -0.3,  1.57],
+        [2.6, -0.3, -1.57],
+        [2.6, -0.3, 1.57]
     ]
 
     tableReceived: dict = {}
@@ -159,6 +161,6 @@ if __name__ == "__main__":
                 if table == list(tableReceived.keys())[-1]:
                     tableReceived = {}
                     trayReceived = {}
-                    setGoalPose(0.0, -0.3, 0.0)
+                    setGoalPose(0.2, -0.3, 0.0)
                     time.sleep(5)
                     menu.resetOrder()

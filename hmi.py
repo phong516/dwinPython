@@ -86,12 +86,19 @@ class MenuSelection:
 
                 text_order_str += f"{remove_accents(item.name)}: {item.quantity} x {item.unit_price}k = {item.total_price}k\r\n"
         else:
-            recognizer = sr.Recognizer()
-            with sr.Microphone() as source:
-                audio = recognizer.listen(source)
-            content = recognizer.recognize_google(audio, language='vi-VN')
-            content = text_to_number(content)
-            print(content)
+            # recognizer = sr.Recognizer()
+            # with sr.Microphone() as source:
+            #     audio = recognizer.listen(source)
+
+            # try:
+            #     content = recognizer.recognize_google(audio, language='vi-VN')
+            # except Exception as e:
+            #     self.dwin.switchPage(1)
+            #     return
+            # print(content)
+            # content = text_to_number(content)
+            time.sleep(5)
+            content = "1 bánh mì 1 nước ngọt"
             pattern = r'(\d+)\s+([^\d,]+)'
             matches = re.findall(pattern, content)
             self.dwin.switchPage(4)
